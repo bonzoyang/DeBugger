@@ -13,8 +13,9 @@ import pickle as pkl
 import json
 
 import uvicorn
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, Depends
 from apiExamples import *
+from sqlalchemy.orm import Session
 
 import logging
 import datetime
@@ -30,48 +31,51 @@ seed(0)
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from .schemas import CreateSpiderRequest
+from .database import get_db
+from .models import Morth, Otherinsect, Butterfly, Spider, Odonata, Coleoptera, Info
 
 
 # In[61]:
 ####################################################################################################################################
-HelloWorldEx = Body(...,
-    examples={"simple": {"summary": "One sample example.",
-                         "description": "One sample example",
-                         "value": {"hello": "hello"},
-                         },
-             })
+# HelloWorldEx = Body(...,
+#     examples={"simple": {"summary": "One sample example.",
+#                          "description": "One sample example",
+#                          "value": {"hello": "hello"},
+#                          },
+#              })
 
-HelloWorldRe =  {200: {"description": "Success",
-                       "content": {
-                                   "application/json": {
-                                                        "examples": {"simple": {
-                                                                                "summary": "One sample example.",
-                                                                                "value": {"hello": "world", "status":200}
-                                                                               },
-                                                                    }
-                                                       }
-                                  }
-                      },
-                 400: {"description": "Success",
-                       "content": {
-                                   "application/json": {
-                                                        "examples": {"simple": {
-                                                                                "summary": "One sample example.",
-                                                                                "value": {"hello": "", "status":404}
-                                                                               },
-                                                                    }
-                                                       }
-                                  }
-                      },
-                }
+# HelloWorldRe =  {200: {"description": "Success",
+#                        "content": {
+#                                    "application/json": {
+#                                                         "examples": {"simple": {
+#                                                                                 "summary": "One sample example.",
+#                                                                                 "value": {"hello": "world", "status":200}
+#                                                                                },
+#                                                                     }
+#                                                        }
+#                                   }
+#                       },
+#                  400: {"description": "Success",
+#                        "content": {
+#                                    "application/json": {
+#                                                         "examples": {"simple": {
+#                                                                                 "summary": "One sample example.",
+#                                                                                 "value": {"hello": "", "status":404}
+#                                                                                },
+#                                                                     }
+#                                                        }
+#                                   }
+#                       },
+#                 }
 
-HelloWorld = NewType('HelloWorld', str)
-class HelloWorldData(BaseModel):
-    hello: HelloWorld
+# HelloWorld = NewType('HelloWorld', str)
+# class HelloWorldData(BaseModel):
+#     hello: HelloWorld
 
-class HelloWorldReturn(BaseModel):
-    hello: HelloWorld
-    status: int
+# class HelloWorldReturn(BaseModel):
+#     hello: HelloWorld
+#     status: int
 #####################################################################################################################################
 
 # preload
@@ -94,7 +98,6 @@ class Request(BaseModel):
 class BioInfoRsp(BaseModel):
     name: str # 學名
     taxonomy: Dict # 界門綱目科屬種
-    others: Dict # 其他資訊
     status: int
 
 class BioDistRsp(BaseModel):
@@ -120,44 +123,75 @@ def Query(table, condition):
 
 app = FastAPI()
 
+####################################################################################################################################
+@app.post("/create")
+def create(details: CreateSpiderRequest, db: Session = Depends(get_db)):
+    to_create = Spider(
+        name = details.Name,
+        date = details.Date,
+        polygonid = details.PolygonId,
+        zerozero = details.ZeroZero,
+        zeroone = details.ZeroOne,
+        onezero = details.OneZero,
+        oneone = details.OneOne,
+    )
+    db.add(to_create)
+    db.commit()
+    return { 
+        "success": True,
+        "created_id": to_create.id
+    }
+
+@app.get("/getbyid")
+def get_by_id(id: int, db: Session = Depends(get_db)):
+    return db.query(Spider).filter(Spider.id == id).first()
+
+# @app.delete("/")
+# def delete(id: int, db: Session = Depends(get_db)):
+#     db.query(Spider).filter(Spider.id == id).delete()
+#     db.commit()
+#     return { "success": True }
+####################################################################################################################################
+
+
 
 ####################################################################################################################################
-@app.post("/helloworld", response_model=Union[HelloWorldReturn, bytes], responses=HelloWorldRe)
-async def helloworld(j: Union[HelloWorldData, bytes] = HelloWorldEx):
-    """
-    說明：hello world 測試用 api
-    路徑：/helloworld
-    方法：POST  
-    輸入：json  
-    json keys：{"hello":字串}  
-              當 "hello" 字串為 "world" 就回應 "world"，其他的值就會回空字串 ""
+# @app.post("/helloworld", response_model=Union[HelloWorldReturn, bytes], responses=HelloWorldRe)
+# async def helloworld(j: Union[HelloWorldData, bytes] = HelloWorldEx):
+#     """
+#     說明：hello world 測試用 api
+#     路徑：/helloworld
+#     方法：POST  
+#     輸入：json  
+#     json keys：{"hello":字串}  
+#               當 "hello" 字串為 "world" 就回應 "world"，其他的值就會回空字串 ""
          
-         例：
-         {"hello": "hello" 
-         }
-    """
-    try:
-        if not isinstance (j, bytes):
-            hello = 'world'if np.array(j.hello) == 'hello' else ':('
-            status = 200
-        else:
-            d = json.loads(j.decode("utf-8").replace("\n", ''))
-            hello = 'world'if np.array(d['hello']) == 'hello' else ':('
-            status = 200
+#          例：
+#          {"hello": "hello" 
+#          }
+#     """
+#     try:
+#         if not isinstance (j, bytes):
+#             hello = 'world'if np.array(j.hello) == 'hello' else ':('
+#             status = 200
+#         else:
+#             d = json.loads(j.decode("utf-8").replace("\n", ''))
+#             hello = 'world'if np.array(d['hello']) == 'hello' else ':('
+#             status = 200
         
-    except Exception as e:
-        logging.basicConfig(filename='api.log', level=logging.DEBUG)
-        t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        logging.error(f'[{t}] api:helloworld {e}')
-        hello = ''
-        status = 400
+#     except Exception as e:
+#         logging.basicConfig(filename='api.log', level=logging.DEBUG)
+#         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#         logging.error(f'[{t}] api:helloworld {e}')
+#         hello = ''
+#         status = 400
     
-    return {"hello":hello, "status":status}
+#     return {"hello":hello, "status":status}
 ####################################################################################################################################
 
 
 @app.post("/api/bioinfo", response_model=Union[BioInfoRsp, bytes], responses=BioInfoRe)
-async def bioinfo(j: Union[Request, bytes] = BioInfoEx):
+async def bioinfo(j: Union[Request, bytes] = BioInfoEx, db: Session = Depends(get_db)):
     """
     Abstract: Bilology information of a species  
     Url: /api/bioinfo  
@@ -166,11 +200,10 @@ async def bioinfo(j: Union[Request, bytes] = BioInfoEx):
     Request: {"polygon": (<font color=red>not used here</font>) Array of indices between 0 and 2939 which maps to a 70×42 raster of Taiwan. 0 represents grid (0, 0) which is the most northwestern grid of the raster, 2939 represents grid (69, 41) which is the most southeastern grid of the raster.  
     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"name": String of the science name of the species.  
     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"date": (<font color=red>not used here</font>) Which season to query, should be the first day of the season.}  
-    """
-
+    """    
+    
     name = ''    
-    taxonomy = {'kingdom':'', 'kingdom':'', 'phylum':'', 'class':'', 'order':'', 'family':'', 'genus':'', 'species':''}
-    others = {}
+    taxonomy = {'kingdom':'', 'class':'', 'family':''}
     status = 200
     try:
         if not isinstance (j, bytes): 
@@ -179,21 +212,23 @@ async def bioinfo(j: Union[Request, bytes] = BioInfoEx):
             d = json.loads(j.decode("utf-8").replace("\n", ''))
             name = d['name']
 
-        q = Query('taxonomy', {'name': name})
-        taxonomy = q[['kingdom', 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']].to_dict('records')[0]
-        print(q, taxonomy)
+        print('-'*50)
+        print(name)
+        print('-'*50)
+        q =  db.query(Info).filter(Info.Name == name).first()
+        print(q.Kingdom, q.Class, q.Family)
+        taxonomy = {'kingdom':q.Kingdom, 'class':q.Class, 'family':q.Family}
         
     except Exception as e:
         logging.basicConfig(filename='api.log', level=logging.DEBUG)
         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         logging.error(f'[{t}] api:auxinfo {e}')
         name = ''
-        taxonomy = {'kingdom':'', 'kingdom':'', 'phylum':'', 'class':'', 'order':'', 'family':'', 'genus':'', 'species':''}
-        others = {}    
+        taxonomy = {'kingdom':'', 'class':'', 'family':''}
         status = 400
 
 
-    return {"name":name, "taxonomy":taxonomy, "others":others, "status":status}
+    return {"name":name, "taxonomy":taxonomy, "status":status}
 
 
 @app.post("/api/biodist", response_model=Union[BioDistRsp, bytes], responses=BioDistRe)
@@ -229,7 +264,6 @@ async def biodist(j: Union[Request, bytes] = BioDistEx):
 
             
     except Exception as e:
-        print('fuck happened')
         logging.basicConfig(filename='api.log', level=logging.DEBUG)
         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         logging.error(f'[{t}] api:helloworld {e}')
