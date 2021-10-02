@@ -4,12 +4,12 @@
 # In[60]:
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 
 import pandas as pd
 import numpy as np
 import pickle as pkl
-#from tensorflow import keras
+from collections import defaultdict
 import json
 
 import uvicorn
@@ -31,62 +31,25 @@ seed(0)
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from .schemas import CreateSpiderRequest
+#from .schemas import CreateSpiderRequest
 from .database import get_db
-from .models import Morth, Otherinsect, Butterfly, Spider, Odonata, Coleoptera, Info
+from .models import Moth, Other, Butterfly, Spider, Odonata, Coleoptera, Info, Track, FeatureImp, EcoDiv
+
+POLYGONTOTAL = 2940 # 70*42
 
 
-# In[61]:
-####################################################################################################################################
-# HelloWorldEx = Body(...,
-#     examples={"simple": {"summary": "One sample example.",
-#                          "description": "One sample example",
-#                          "value": {"hello": "hello"},
-#                          },
-#              })
-
-# HelloWorldRe =  {200: {"description": "Success",
-#                        "content": {
-#                                    "application/json": {
-#                                                         "examples": {"simple": {
-#                                                                                 "summary": "One sample example.",
-#                                                                                 "value": {"hello": "world", "status":200}
-#                                                                                },
-#                                                                     }
-#                                                        }
-#                                   }
-#                       },
-#                  400: {"description": "Success",
-#                        "content": {
-#                                    "application/json": {
-#                                                         "examples": {"simple": {
-#                                                                                 "summary": "One sample example.",
-#                                                                                 "value": {"hello": "", "status":404}
-#                                                                                },
-#                                                                     }
-#                                                        }
-#                                   }
-#                       },
-#                 }
-
-# HelloWorld = NewType('HelloWorld', str)
-# class HelloWorldData(BaseModel):
-#     hello: HelloWorld
-
-# class HelloWorldReturn(BaseModel):
-#     hello: HelloWorld
-#     status: int
-#####################################################################################################################################
 
 # preload
 #taxonomyTable = pd.read_csv('TaiwanSpecies20210813_UTF8.csv')
 plg2coor = pkl.load(open('plg2coor.pkl', 'rb'))
+taxa2tbl = {'moth':Moth, 'butterfly':Butterfly, 'spider':Spider, 'other':Other, 'odonata':Odonata, 'coleoptera':Coleoptera}
 
 # new types
 Array = NewType('Array', List[List[float]])
 Date = NewType('Date', datetime.datetime)
 Polygons = NewType('Polygons', List[int] )
 Heatmaps = NewType('Heatmaps', List[Dict])
+Featimp = NewType('Featimp', List[Dict])
 List2D = NewType('Track', List[List])
   
 # self-defined request & response
@@ -102,15 +65,15 @@ class BioInfoRsp(BaseModel):
 
 class BioDistRsp(BaseModel):
     heatmap: Heatmaps
-    featimp: Dict # 特徵重要度 
+    featimp: Featimp # 特徵重要度 
     status: int
+    all_zero: bool
     
 class BioTrackRsp(BaseModel):
     track: List2D
     status: int
     
 class EcoDivRsp(BaseModel):
-    thld: float
     diversity: List2D    
     status: int
     
@@ -123,72 +86,28 @@ def Query(table, condition):
 
 app = FastAPI()
 
-####################################################################################################################################
-@app.post("/create")
-def create(details: CreateSpiderRequest, db: Session = Depends(get_db)):
-    to_create = Spider(
-        name = details.Name,
-        date = details.Date,
-        polygonid = details.PolygonId,
-        zerozero = details.ZeroZero,
-        zeroone = details.ZeroOne,
-        onezero = details.OneZero,
-        oneone = details.OneOne,
-    )
-    db.add(to_create)
-    db.commit()
-    return { 
-        "success": True,
-        "created_id": to_create.id
-    }
-
-@app.get("/getbyid")
-def get_by_id(id: int, db: Session = Depends(get_db)):
-    return db.query(Spider).filter(Spider.id == id).first()
-
-# @app.delete("/")
-# def delete(id: int, db: Session = Depends(get_db)):
-#     db.query(Spider).filter(Spider.id == id).delete()
-#     db.commit()
-#     return { "success": True }
-####################################################################################################################################
-
-
-
-####################################################################################################################################
-# @app.post("/helloworld", response_model=Union[HelloWorldReturn, bytes], responses=HelloWorldRe)
-# async def helloworld(j: Union[HelloWorldData, bytes] = HelloWorldEx):
-#     """
-#     說明：hello world 測試用 api
-#     路徑：/helloworld
-#     方法：POST  
-#     輸入：json  
-#     json keys：{"hello":字串}  
-#               當 "hello" 字串為 "world" 就回應 "world"，其他的值就會回空字串 ""
-         
-#          例：
-#          {"hello": "hello" 
-#          }
-#     """
-#     try:
-#         if not isinstance (j, bytes):
-#             hello = 'world'if np.array(j.hello) == 'hello' else ':('
-#             status = 200
-#         else:
-#             d = json.loads(j.decode("utf-8").replace("\n", ''))
-#             hello = 'world'if np.array(d['hello']) == 'hello' else ':('
-#             status = 200
-        
-#     except Exception as e:
-#         logging.basicConfig(filename='api.log', level=logging.DEBUG)
-#         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-#         logging.error(f'[{t}] api:helloworld {e}')
-#         hello = ''
-#         status = 400
-    
-#     return {"hello":hello, "status":status}
-####################################################################################################################################
-
+#####################################################################################################################################
+#@app.post("/create")
+#def create(details: CreateSpiderRequest, db: Session = Depends(get_db)):
+#    to_create = Spider(
+#        name = details.Name,
+#        date = details.Date,
+#        polygonid = details.PolygonId,
+#        zerozero = details.ZeroZero,
+#        zeroone = details.ZeroOne,
+#        onezero = details.OneZero,
+#        oneone = details.OneOne,
+#    )
+#    db.add(to_create)
+#    db.commit()
+#    return { 
+#        "success": True,
+#        "created_id": to_create.id
+#    }
+#
+#@app.get("/getbyid")
+#def get_by_id(id: int, db: Session = Depends(get_db)):
+#    return db.query(Spider).filter(Spider.id == id).first()
 
 @app.post("/api/bioinfo", response_model=Union[BioInfoRsp, bytes], responses=BioInfoRe)
 async def bioinfo(j: Union[Request, bytes] = BioInfoEx, db: Session = Depends(get_db)):
@@ -212,11 +131,7 @@ async def bioinfo(j: Union[Request, bytes] = BioInfoEx, db: Session = Depends(ge
             d = json.loads(j.decode("utf-8").replace("\n", ''))
             name = d['name']
 
-        print('-'*50)
-        print(name)
-        print('-'*50)
         q =  db.query(Info).filter(Info.Name == name).first()
-        print(q.Kingdom, q.Class, q.Family)
         taxonomy = {'kingdom':q.Kingdom, 'class':q.Class, 'family':q.Family}
         
     except Exception as e:
@@ -230,9 +145,8 @@ async def bioinfo(j: Union[Request, bytes] = BioInfoEx, db: Session = Depends(ge
 
     return {"name":name, "taxonomy":taxonomy, "status":status}
 
-
 @app.post("/api/biodist", response_model=Union[BioDistRsp, bytes], responses=BioDistRe)
-async def biodist(j: Union[Request, bytes] = BioDistEx):
+async def biodist(j: Union[Request, bytes] = BioDistEx, db: Session = Depends(get_db)):
     """
     Abstract: Biology distribution of a species  
     Url: /api/biodist  
@@ -243,39 +157,78 @@ async def biodist(j: Union[Request, bytes] = BioDistEx):
     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"date": (<font color=red>not used here</font>) Which season to query, should be the first day of the season.}  
     """    
 
-    
-    heatmap = [[]]
-    featimp = {'altitude':10, 'vegetation':5, 'water content':7}
+    heatmap = []
+    featimp = [{"name": "", "value": ""}, {"name": "", "value": ""}, {"name": "", "value": ""}]
     status = 200    
+    all_zero = False
     try:
         if not isinstance (j, bytes):
-            polygons =[plg2coor[pid] for pid in j.polygon]
             name = j.name
-            date = j.date
-            heatmap =[ {"id": pid, "heatmap": (np.random.rand(3,3)*10).tolist()}  for pid in j.polygon ]
-            featimp = {'altitude':randint(1,10), 'vegetation':randint(1,10), 'water content':randint(1,10)} ## to be changed
+            date = j.date if isinstance(j.date, str) else j.date.strftime('%Y-%m-%d')
+            #date = datetime.datetime.strptime(j.date, '%Y-%m-%d') if isinstance(j.date, str) else j.date
+            #date = date.date()
+            
         else:
             d = json.loads(j.decode("utf-8").replace("\n", ''))
-            polygons =[ plg2coor[pid] for pid in d['polygon'] ]
             name = d['name']
-            date = d['date']
-            heatmap =[ {"id": pid, "heatmap": (np.random.rand(3,3)*10).tolist()}  for pid in j.polygon ]
-            featimp = {'altitude':randint(1,10), 'vegetation':randint(1,10), 'water content':randint(1,10)} ## to be changed
+            date = d['date'] if isinstance(d['date'], str) else d['date'].strftime('%Y-%m-%d')
+            #date = datetime.datetime.strptime(d['date'], '%Y-%m-%d') if isinstance(d['date'], str) else d['date']
+            #date = date.date()
+  
+        
+        q = db.query(Info).filter(Info.Name == name).first()
+        if q.Taxa in taxa2tbl:
+            Table = taxa2tbl[q.Taxa]
+            
+        table = Table.__tablename__
+        sql = f"SELECT \"PolygonId\",\"H0\",\"H1\",\"H2\",\"H3\" FROM {table} WHERE \"Name\" = \'{name}\' AND \"Date\" =\'{date}\';"
+        q = pd.read_sql(sql, db.bind)
+  
+        
+        q['heatmap'] = q.apply(lambda x: f"[[{x['H0']}, {x['H1']}],[{x['H2']}, {x['H3']}]]", axis=1)
+        q['heatmap'] = q.apply(lambda x: eval(x['heatmap']), axis=1)
+        all_zero = not sum([ np.array(_).sum() for _ in q['heatmap']])
 
+        heatmap = q.drop(['H0','H1','H2','H3'], axis=1).rename(columns={'PolygonId':'id'}).to_dict('records')
+
+        
+        q = db.query(FeatureImp).filter(Info.Name == name).first()
+        featimp = [{"name":q.F1Name, "value":round(q.F1Value,2)}, {"name":q.F2Name, "value":round(q.F2Value,2)}, {"name":q.F3Name, "value":round(q.F3Value,2)}, {"name":q.F4Name, "value":round(q.F4Value,2)}]
+        
+        if not heatmap:
+            status=400
+        
+
+
+            
+
+        # for pid in range(POLYGONTOTAL):
+        #     polygon = {}
+        #     q = db.query(Table).filter(Table.Name == name).filter(Table.Date == date).first()
+        #     polygon["id"] = pid
+        #     polygon["heatmap"] = [[q.H0, q.H1, q.H2, q.H3], 
+        #                           [q.H4, q.H5, q.H6, q.H7],
+        #                           [q.H8, q.H9, q.HA, q.HB],
+        #                           [q.HC, q.HD, q.HE, q.HF]] 
+        #     heatmap.append(polygon)
+        
+        #q = db.query(FeatureImp).filter(Info.Name == name).first()
+        #featimp[{"name": q.F1Name, "value": q.F1Val}, {"name": q.F2Name, "value": q.F2Val}, {"name": q.F3Name, "value": q.F3Val}]
             
     except Exception as e:
         logging.basicConfig(filename='api.log', level=logging.DEBUG)
         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        logging.error(f'[{t}] api:helloworld {e}')
-        heatmap = [[]]
-        featimp = {'altitude':-99, 'vegetation':-99, 'water content':-99}
+        logging.error(f'[{t}] api:biodist {e}')
+        heatmap = []
+        featimp = [{"name": "", "value": ""}, {"name": "", "value": ""}, {"name": "", "value": ""}]
         status = 400
+        all_zero = True
     
-    return {"heatmap":heatmap, "featimp":{}, "status":status}
+    return {"heatmap":heatmap, "featimp":featimp, "status":status, "all_zero":all_zero}
 
 
 @app.post("/api/biotrack", response_model=Union[BioTrackRsp, bytes], responses=BioTrackRe)
-async def biotrack(j: Union[Request, bytes] = BioTrackEx):
+async def biotrack(j: Union[Request, bytes] = BioTrackEx, db: Session = Depends(get_db)):
     """
     Abstract: Biology track of a species  
     Url: /api/biotrack  
@@ -291,25 +244,18 @@ async def biotrack(j: Union[Request, bytes] = BioTrackEx):
     status = 200        
     try:
         if not isinstance (j, bytes):
-            polygons =[ plg2coor[pid] for pid in j.polygon ]
             name = j.name
-            date = j.date            
-            
-            ts = [ datetime.datetime(2020, 1, 1), datetime.datetime(2020, 4, 1), datetime.datetime(2020, 7, 1), datetime.datetime(2020, 10, 1), 
-                  datetime.datetime(2021, 1, 1), datetime.datetime(2021, 4, 1), datetime.datetime(2021, 7, 1), datetime.datetime(2021, 10, 1)]
-            track = [[t]+ choice(choice(polygons)) for t, _  in zip(ts, range(randint(3,10))) ]
         else:
             d = json.loads(j.decode("utf-8").replace("\n", ''))
-            polygons =[ plg2coor[pid] for pid in d['polygon'] ]
             name = d['name']
-            date = d['date']
-            track = [[t]+choice(choice(polygons)) for t, _  in zip(ts, range(randint(3,10))) ]
-
+        
+        q = db.query(Track).filter(Track.Name == name).all()
+        track = [ [t.Date, t.Lat, t.Long]for t in q]
 
     except Exception as e:
         logging.basicConfig(filename='api.log', level=logging.DEBUG)
         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        logging.error(f'[{t}] api:helloworld {e}')
+        logging.error(f'[{t}] api:biotrack {e}')
         track = [[]]
         status = 400
     
@@ -317,7 +263,7 @@ async def biotrack(j: Union[Request, bytes] = BioTrackEx):
 
 
 @app.post("/api/ecodiv", response_model=Union[EcoDivRsp, bytes], responses=EcoDivRe)
-async def ecodiv(j: Union[Request, bytes] = EcoDivEx):
+async def ecodiv(j: Union[Request, bytes] = EcoDivEx, db: Session = Depends(get_db)):
     """
     Abstract: Biology track of a species  
     Url: /api/biotrack  
@@ -329,34 +275,37 @@ async def ecodiv(j: Union[Request, bytes] = EcoDivEx):
     """    
 
     
-    thld = 10
+
     diversity = []    
     status = 200   
     try:
         if not isinstance (j, bytes):
-            polygons =[ plg2coor[pid] for pid in j.polygon ]
-            name = j.name
-            date = j.date
-            
-            diversity = [ [datetime.datetime(y, m, 1), randint(20,50)] for y, m in zip([2019]*2+[2020]*4+[2021]*4, [7, 10, 1, 4, 7, 10, 1, 4, 7, 10])]
+            polygons = j.polygon
         else:
             d = json.loads(j.decode("utf-8").replace("\n", ''))
-            polygons =[ plg2coor[pid] for pid in d['polygon'] ]
-            name = d['name']
-            date = d['date']
+            polygons = d['polygon']
             
-            diversity = [ [datetime.datetime(y, m, 1), randint(20,50)] for y, m in zip([2019]*2+[2020]*4+[2021]*4, [7, 10, 1, 4, 7, 10, 1, 4, 7, 10])]
+
+        q = db.query(EcoDiv).filter(EcoDiv.PolygonId.in_(polygons)).all()
+        
+        div = defaultdict(lambda :0)
+        for t in q:
+            div[t.Date] += t.Count  
+
+
+        diversity = [[_[0],_[1]] for _ in  sorted(div.items(), key=lambda x: x[0])]
+            
+            
 
 
     except Exception as e:
         logging.basicConfig(filename='api.log', level=logging.DEBUG)
         t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        logging.error(f'[{t}] api:helloworld {e}')
-        thld = 0
+        logging.error(f'[{t}] api:ecodiv {e}')
         diversity = []    
         status = 400
     
-    return {"thld":thld, "diversity":[], "status":status}
+    return {"diversity":diversity, "status":status}
 
 
 
@@ -379,6 +328,6 @@ if __name__ == "__main__":
                         dest='port', action='store', default=8100,
                         help='port number for the api service')
     args = parser.parse_args()
-    title = f"start DSP TAIPOWER API at sport \033[36m{args.port}\033[0m"
+    title = f"start de Bugger API at sport \033[36m{args.port}\033[0m"
     printTitle(title)
     uvicorn.run("app", host="0.0.0.0", port=args.port, reload=True)

@@ -14,9 +14,9 @@ polygons =[ plg2coor[pid] for pid in range(0,2939) ]
 BioInfoEx = Body(...,
                  examples={"simple": {"summary": "One sample example.",
                                       "description": "One sample example",
-                                      "value": {"polygon": [5+42*10, 6+42*10, 7+42*10, 5+42*11, 6+42*11, 7+42*11, 5+42*12, 6+42*12, 7+42*12], 
+                                      "value": {"polygon":[], 
                                                 "name": "Euphaea formosa",
-                                                "date": datetime(2019, 10, 1)},
+                                                "date": ""},
                                      },
                           }
                 )

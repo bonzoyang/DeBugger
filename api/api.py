@@ -14,6 +14,6 @@ if __name__ == "__main__":
                         dest='port', action='store', default=8100,
                         help='port number for the api service')
     args = parser.parse_args()
-    title = f"start DSP TAIPOWER API at sport \033[36m{args.port}\033[0m"
+    title = f"start de Bugger API at sport \033[36m{args.port}\033[0m"
     printTitle(title)
     uvicorn.run("api:app", host="0.0.0.0", port=args.port, reload=True)

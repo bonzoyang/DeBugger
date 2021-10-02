@@ -13,6 +13,8 @@ services:
     api:
         image: "api"
         container_name: "api"
+        links:
+            - db
         ports:
             - "8765:8765"
         expose:
