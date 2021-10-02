@@ -192,8 +192,8 @@ async def biodist(j: Union[Request, bytes] = BioDistEx, db: Session = Depends(ge
         heatmap = q.drop(['H0','H1','H2','H3'], axis=1).rename(columns={'PolygonId':'id'}).to_dict('records')
 
         
-        q = db.query(FeatureImp).filter(Info.Name == name).first()
-        featimp = [{"name":q.F1Name, "value":round(q.F1Value,2)}, {"name":q.F2Name, "value":round(q.F2Value,2)}, {"name":q.F3Name, "value":round(q.F3Value,2)}, {"name":q.F4Name, "value":round(q.F4Value,2)}]
+        q = db.query(FeatureImp).filter(FeatureImp.Name == name).first()
+        featimp = [{"name":q.F1Name, "value":round(q.F1Value,3)}, {"name":q.F2Name, "value":round(q.F2Value,3)}, {"name":q.F3Name, "value":round(q.F3Value,3)}, {"name":q.F4Name, "value":round(q.F4Value,3)}]
         
         if not heatmap:
             status=400

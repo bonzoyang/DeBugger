@@ -1,2 +1,8 @@
 .ipynb*
 __pycache__
+dbdata
+db/dbdata  
+db/dist  
+db/ecodiv  
+db/info  
+db/track
