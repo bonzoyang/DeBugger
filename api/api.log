@@ -245,3 +245,188 @@ INFO:uvicorn.error:Shutting down
 INFO:uvicorn.error:Waiting for application shutdown.
 INFO:uvicorn.error:Application shutdown complete.
 INFO:uvicorn.error:Finished server process [21]
+ERROR:root:[2021-10-02 16:51:39] api:ecodiv (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [174]
+ERROR:root:[2021-10-02 16:52:11] api:biodist (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:52:11] api:ecodiv (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:52:11] api:biotrack (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [188]
+ERROR:root:[2021-10-02 16:53:15] api:biodist (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:53:15] api:ecodiv (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:53:15] api:biotrack (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:55:04] api:ecodiv (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:55:04] api:biodist (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:55:05] api:biotrack (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:56:54] api:biodist (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:56:54] api:ecodiv (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:56:54] api:biotrack (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+ERROR:root:[2021-10-02 16:57:57] api:biodist (psycopg2.OperationalError) FATAL:  password authentication failed for user "postgres"
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [202]
+ERROR:root:[2021-10-02 16:58:09] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 16:58:16] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 16:58:21] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [217]
+ERROR:root:[2021-10-02 16:58:24] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 16:58:37] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:23:55] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:24:05] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:25:02] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:27:30] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:27:50] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:28:01] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:28:05] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:28:28] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:28:34] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:30:03] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:30:18] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [231]
+ERROR:root:[2021-10-02 17:32:33] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:33:34] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:34:09] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [260]
+ERROR:root:[2021-10-02 17:38:09] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [287]
+ERROR:root:[2021-10-02 17:40:13] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:40:48] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [314]
+ERROR:root:[2021-10-02 17:41:37] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:42:12] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [328]
+ERROR:root:[2021-10-02 17:42:24] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [343]
+ERROR:root:[2021-10-02 17:43:12] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [357]
+ERROR:root:[2021-10-02 17:44:43] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:46:37] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [371]
+ERROR:root:[2021-10-02 17:50:56] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [385]
+ERROR:root:[2021-10-02 17:52:27] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:54:09] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:54:14] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 17:54:39] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [399]
+ERROR:root:[2021-10-02 17:56:34] api:biodist 'str' object has no attribute 'csv'
+ERROR:root:[2021-10-02 17:56:39] api:biodist 'str' object has no attribute 'csv'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [427]
+ERROR:root:[2021-10-02 17:58:20] api:biodist 'str' object has no attribute 'csv'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [454]
+ERROR:root:[2021-10-02 18:00:29] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:02:11] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:02:19] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:02:21] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:19:31] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:21:56] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:22:02] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [533]
+ERROR:root:[2021-10-02 18:22:48] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [549]
+ERROR:root:[2021-10-02 18:25:00] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [563]
+ERROR:root:[2021-10-02 18:28:26] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:29:15] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-02 18:34:59] api:biodist 'NoneType' object has no attribute 'F1Name'
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [578]
+ERROR:root:[2021-10-02 18:36:58] api:biodist 'NoneType' object has no attribute 'F1Name'
+ERROR:root:[2021-10-03 00:21:54] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 00:27:57] api:biodist Wrong number of items passed 5, placement implies 1
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [594]
+ERROR:root:[2021-10-03 02:43:49] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 02:43:53] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 02:44:14] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 14:15:44] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 14:17:24] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 15:18:55] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 15:46:49] api:biodist Wrong number of items passed 5, placement implies 1
+ERROR:root:[2021-10-03 15:50:30] api:biodist Wrong number of items passed 5, placement implies 1

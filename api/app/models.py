@@ -114,4 +114,12 @@ class EcoDiv(Base):
     id = Column(Integer, primary_key=True)
     Date = Column(sqa.Date, nullable=False)
     PolygonId = Column(Integer, nullable=False)
-    Count = Column(Integer, nullable=False)    
+    Species = Column(String, nullable=False)
+    
+    
+# class EcoDiv(Base):
+#     __tablename__ = 'ecodiv'
+#     id = Column(Integer, primary_key=True)
+#     Date = Column(sqa.Date, nullable=False)
+#     PolygonId = Column(Integer, nullable=False)
+#     Count = Column(Integer, nullable=False)    

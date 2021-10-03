@@ -183,13 +183,15 @@ async def biodist(j: Union[Request, bytes] = BioDistEx, db: Session = Depends(ge
         table = Table.__tablename__
         sql = f"SELECT \"PolygonId\",\"H0\",\"H1\",\"H2\",\"H3\" FROM {table} WHERE \"Name\" = \'{name}\' AND \"Date\" =\'{date}\';"
         q = pd.read_sql(sql, db.bind)
-  
         
         q['heatmap'] = q.apply(lambda x: f"[[{x['H0']}, {x['H1']}],[{x['H2']}, {x['H3']}]]", axis=1)
         q['heatmap'] = q.apply(lambda x: eval(x['heatmap']), axis=1)
-        all_zero = not sum([ np.array(_).sum() for _ in q['heatmap']])
+        
 
+        all_zero = not sum([ np.array(_).sum() for _ in q['heatmap']])
+        q = q.sort_values(by='PolygonId')
         heatmap = q.drop(['H0','H1','H2','H3'], axis=1).rename(columns={'PolygonId':'id'}).to_dict('records')
+        
 
         
         q = db.query(FeatureImp).filter(FeatureImp.Name == name).first()
@@ -197,6 +199,9 @@ async def biodist(j: Union[Request, bytes] = BioDistEx, db: Session = Depends(ge
         
         if not heatmap:
             status=400
+
+
+        pkl.dump(heatmap, open('fuck.pkl', 'wb'))
         
 
 
@@ -288,12 +293,12 @@ async def ecodiv(j: Union[Request, bytes] = EcoDivEx, db: Session = Depends(get_
 
         q = db.query(EcoDiv).filter(EcoDiv.PolygonId.in_(polygons)).all()
         
-        div = defaultdict(lambda :0)
+        div = defaultdict(lambda :"")
         for t in q:
-            div[t.Date] += t.Count  
+            div[t.Date] += f'+{t.Species}'  
 
 
-        diversity = [[_[0],_[1]] for _ in  sorted(div.items(), key=lambda x: x[0])]
+        diversity = [[_[0], len(set(_[1].split('+'))-set([''])) ] for _ in  sorted(div.items(), key=lambda x: x[0])]
             
             
 
