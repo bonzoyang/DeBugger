@@ -30,9 +30,17 @@
 ### deployment
 1. `docker build -t api .`
 2. `docker-compose -f docker-compose.yaml up`
-3. now you can loging pgadmin 
-  1. login pgadmin
-  2. create connection
-  3. `CREATE DATABASE biodb`
-  4. copy and peast `db/init.sql` to initiate your database 
+4. open browser with `host://localhost:8964` 
+5. login pgadmin with 
+    user:`pgadmin4@pgadmin.org` 
+    password:`pw2pgadmin`
+7. in pgadmin
+   * Add New Server 
+   * Create-Server
+   * Set connection information with 
+   * mantainance database:`postgres` 
+     user: `postgres` 
+     password: `pw2postgres`
+   * create database `biodb`
+   * copy and peast `db/init.sql` to initiate your database 
 
