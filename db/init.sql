@@ -101,7 +101,7 @@ CREATE TABLE ecodiv(
     "id"                  integer PRIMARY KEY,
     "Date"                date,
     "PolygonId"           integer,
-    "Count"               integer
+    "Species"             text
 );
 
 COPY moth("id","Name","Date","PolygonId","H0","H1","H2","H3") FROM '/db/dist/moth.csv' DELIMITER ',' CSV HEADER;
@@ -113,4 +113,4 @@ COPY coleoptera("id","Name","Date","PolygonId","H0","H1","H2","H3") FROM '/db/di
 COPY "info"("id","Name","Kingdom","Class","Family","Taxa","Count") FROM '/db/info/bioinfo.csv' DELIMITER ',' CSV HEADER;
 COPY track("id","Name","Date","Long","Lat") FROM '/db/track/track.csv' DELIMITER ',' CSV HEADER;
 COPY featureimp("id","Name","F1Name","F1Value","F2Name","F2Value","F3Name","F3Value","F4Name","F4Value") FROM '/db/dist/attention.csv' DELIMITER ',' CSV HEADER;
-COPY ecodiv("id","Date","PolygonId","Count") FROM '/db/ecodiv/alliving.csv' DELIMITER ',' CSV HEADER;
+COPY ecodiv("id","Date","PolygonId","Species") FROM '/db/ecodiv/allivings.csv' DELIMITER ',' CSV HEADER;
