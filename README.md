@@ -25,7 +25,7 @@
   ```bash=
   SQLALCHEMY_DATABASE_URL = "postgresql://postgres:pw2postgres@db:5432/biodb"
   ``` 
-   you should change `fakepassword` to your own content.
+   you should change `pw2postgres` to your own content.
   
 ### deployment
 1. `docker build -t api .`
