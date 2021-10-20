@@ -11,8 +11,8 @@
   POSTGRES_USER=postgres
   POSTGRES_PASSWORD=pw2postgres
   ```
-  you should change `POSTGRES_PASSWORD` to your own content.
-  2. in `docker-compose.yaml`
+  you should change `POSTGRES_PASSWORD` to your own content. 
+  2. in `docker-compose.yaml` 
   ```bash=
     pgadmin:
         container_name: pgadmin
