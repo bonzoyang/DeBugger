@@ -5,14 +5,14 @@
   
 ### before deployment 
 * \*\*note:\*\* 
-  bellows are fake info, you should change to your own content
-  1. in `env/postgres.env`
+  bellows are fake info, you should change to your own content 
+  1. in `env/postgres.env` 
   ```bash=
   POSTGRES_USER=postgres
   POSTGRES_PASSWORD=pw2postgres
   ```
-  you should change `POSTGRES_PASSWORD` to your own content.
-  2. in `docker-compose.yaml`
+  you should change `POSTGRES_PASSWORD` to your own content. 
+  2. in `docker-compose.yaml` 
   ```bash=
     pgadmin:
         container_name: pgadmin
